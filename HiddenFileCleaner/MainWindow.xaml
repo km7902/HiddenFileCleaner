@@ -1,0 +1,69 @@
+﻿<Window x:Class="HiddenFileCleaner.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        Title="HiddenFileCleaner" Width="800" Height="450" MinWidth="480" MinHeight="320" ResizeMode="CanResizeWithGrip" Icon="HiddenFileCleaner.ico">
+    <DockPanel>
+        <Menu Background="Transparent" DockPanel.Dock="Top">
+            <MenuItem Header="ファイル(_F)">
+                <MenuItem Header="終了(_X)" Click="MenuClose"/>
+            </MenuItem>
+            <MenuItem Header="オプション(_O)">
+                <MenuItem IsCheckable="True" IsChecked="True" Header=".DS__Store を検索する" x:Name="MenuOption0"/>
+                <MenuItem IsCheckable="True" IsChecked="True" Header=".__* を検索する" x:Name="MenuOption1"/>
+                <MenuItem IsCheckable="True" IsChecked="True" Header=".apdisk を検索する" x:Name="MenuOption2"/>
+                <MenuItem IsCheckable="True" IsChecked="True" Header="Thumbs.db を検索する" x:Name="MenuOption3"/>
+                <MenuItem IsCheckable="True" IsChecked="True" Header="Desktop.ini を検索する" x:Name="MenuOption4"/>
+            </MenuItem>
+            <MenuItem Header="バージョン情報(_A)" Click="About"/>
+        </Menu>
+        <StatusBar DockPanel.Dock="Bottom">
+            <TextBlock Text="{Binding Status.StatusText}" />
+        </StatusBar>
+        <Grid Margin="10,0,10,10">
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <ListView Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="5" Margin="0,10" BorderBrush="LightGray" ItemsSource="{Binding List}">
+                <ListView.Resources>
+                    <!-- ヘッダーテキストを左に寄せる -->
+                    <Style TargetType="{x:Type GridViewColumnHeader}">
+                        <Setter Property="HorizontalContentAlignment" Value="Left"/>
+                    </Style>
+                    <!-- 選択列にチェックボックスを配置する -->
+                    <DataTemplate x:Key="tpl_show">
+                        <CheckBox IsChecked="{Binding Select}"/>
+                    </DataTemplate>
+                </ListView.Resources>
+                <ListView.View>
+                    <GridView>
+                        <GridViewColumn Header="選択" CellTemplate="{StaticResource tpl_show}" Width="40"/>
+                        <GridViewColumn Header="ファイル名" DisplayMemberBinding="{Binding FileName}" Width="100"/>
+                        <GridViewColumn Header="フォルダーパス" DisplayMemberBinding="{Binding FolderName}" Width="320"/>
+                        <GridViewColumn Header="作成日時" DisplayMemberBinding="{Binding FileCreateDate}" Width="120"/>
+                        <GridViewColumn Header="更新日時" DisplayMemberBinding="{Binding FileModifyDate}" Width="120"/>
+                        <GridViewColumn Header="サイズ (Byte)" DisplayMemberBinding="{Binding FileSize}" Width="80"/>
+                    </GridView>
+                </ListView.View>
+            </ListView>
+            <Label Content="フォルダー" Grid.Row="1" Grid.Column="0" Margin="0,0,10,0"/>
+            <TextBox Grid.Row="1" Grid.Column="1" x:Name="TextFolderPath" TextWrapping="NoWrap" Text="{Binding Data.FolderPath}" VerticalContentAlignment="Center">
+            </TextBox>
+            <Button Content="..." Grid.Row="1" Grid.Column="2" Margin="0,0,10,0" Padding="5" x:Name="BtnSelectFolder" Click="SelectFolder"/>
+            <Button Content="検索" Grid.Row="1" Grid.Column="3" Margin="0,0,10,0" Padding="24,0" x:Name="BtnSearchFolder" Click="SearchFolder"/>
+            <Button Content="中止" Grid.Row="1" Grid.Column="3" Margin="0,0,10,0" Padding="24,0" x:Name="BtnAbortSearchFolder" Click="AbortSearchFolder" Visibility="Hidden"/>
+            <Button Content="削除" Grid.Row="1" Grid.Column="4" Padding="24,0" x:Name="BtnDeleteFile" Click="DeleteFile"/>
+            <Button Content="中止" Grid.Row="1" Grid.Column="4" Padding="24,0" x:Name="BtnAbortDeleteFile" Click="AbortDeleteFile" Visibility="Hidden"/>
+        </Grid>
+    </DockPanel>
+</Window>
